@@ -10,10 +10,10 @@ namespace Abyss_Call
         }
 
         public FadingStyle Style { get; set; } = FadingStyle.FadeIn;
-        public float LifePercent => ((float)ProperTime)/Lifetime;
-        public int Lifetime { get; set; } = 500;
-        private int _properTime;
-        public int ProperTime
+        public double LifePercent => ProperTime/Lifetime;
+        public double Lifetime { get; set; } = 500;
+        private double _properTime;
+        public double ProperTime
         {
             get
             {

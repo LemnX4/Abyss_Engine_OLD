@@ -11,7 +11,7 @@ namespace Abyss_Call
         {
             Tag = "mouseoverer";
         }
-        protected override void UpdateEntity(Entity entity, int deltaTime)
+        protected override void UpdateEntity(Entity entity, double deltaTime)
         {
             base.UpdateEntity(entity, deltaTime);
 

@@ -23,18 +23,18 @@ namespace Abyss_Call
             SpriteBatch = new SpriteBatch(DeviceManager.GraphicsDevice);
         }
 
-        public void Draw(int deltaTime)
+        public void Draw(double deltaTime)
         {
             SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, null);
 
             foreach (Entity e in EntityBucket)
                 if (e.GetComponent<Drawable>().IsRenderable)
-                    DrawEntity(e, deltaTime);
+                    DrawEntity(e);
 
             SpriteBatch.End();
         }
 
-        public void DrawEntity(Entity entity, int deltaTime)
+        public void DrawEntity(Entity entity)
         {
             Transform t = entity.GetComponent<Transform>();
             Drawable d = entity.GetComponent<Drawable>();

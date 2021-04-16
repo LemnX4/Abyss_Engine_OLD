@@ -10,15 +10,15 @@ namespace Abyss_Call
         {
             Tag = "fader";
         }
-        protected override void UpdateEntity(Entity entity, int deltaTime)
+        protected override void UpdateEntity(Entity entity, double deltaTime)
         {
             Fading f = entity.GetComponent<Fading>();
             f.ProperTime += deltaTime;
 
             if (f.Style == Fading.FadingStyle.FadeIn)
-                entity.GetComponent<Drawable>().Alpha = f.LifePercent;
+                entity.GetComponent<Drawable>().Alpha = (float)f.LifePercent;
             if (f.Style == Fading.FadingStyle.FadeOut)
-                entity.GetComponent<Drawable>().Alpha = 1 - f.LifePercent;
+                entity.GetComponent<Drawable>().Alpha = (float)(1 - f.LifePercent);
         }
     }
 }

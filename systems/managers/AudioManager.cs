@@ -16,25 +16,41 @@ namespace Abyss_Call
         public AudioEmitter Emitter = new AudioEmitter();
         public SoundEffectInstance Instance;
 
-        private List<string> _songs = new List<string>()
+        private readonly List<string> _songs = new List<string>()
         {
             
         };
 
-        private List<string> _soundEffects = new List<string>()
+        private readonly List<string> _soundEffects = new List<string>()
         {
             "mouseover"
         };
 
-        private string _actualTitle = "";
+        public string ActualTitle { get; set; } = null;
 
-        public static readonly float maxVolume = 0.1f;
-        private float _musicVolume = 0.001f, _effectsVolume = 0.001f;
-        private float _elapsed = 0, _fadingTime = 600;
-        private bool _fading = false;
+        public readonly float MaxVolume = 0.1f;
+
+        private float _musicVolume;
+        public float MusicVolume
+        {
+            get
+            {
+                return _musicVolume;
+            }
+            set
+            {
+                _musicVolume = value;
+                MediaPlayer.Volume = value;
+            }
+        }
+        public float EffectsVolume { get; set; } = 0.001f;
+        public int Elapsed { get; set; } = 0;
+        public int FadingTime { get; set; } = 600;
+        public bool Fading { get; set; } = false;
 
         public AudioManager()
         {
+            _musicVolume = 0.001f;
             MediaPlayer.Volume = 0;
         }
 
@@ -53,68 +69,58 @@ namespace Abyss_Call
 
         public void Update(GameTime gameTime)
         {
-            _elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            _elapsed = Math.Min(_elapsed, _fadingTime);
+            Elapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            Elapsed = Math.Min(Elapsed, FadingTime);
 
-            if (_fading)
+            if (Fading)
             {
-                if (_actualTitle == "" || _actualTitle == "title" || MediaPlayer.Queue.ActiveSong != SongDictionary[_actualTitle])
+                if (ActualTitle is null || ActualTitle == "title" || MediaPlayer.Queue.ActiveSong != SongDictionary[ActualTitle])
                 {
-                    MediaPlayer.Volume = Math.Max(1 - _elapsed / _fadingTime, 0) * _musicVolume;
+                    MediaPlayer.Volume = Math.Max(1 - Elapsed / FadingTime, 0) * MusicVolume;
                 }
 
-                else if (MediaPlayer.Volume < _musicVolume)
+                else if (MediaPlayer.Volume < MusicVolume)
                 {
-                    MediaPlayer.Volume = Math.Min(_elapsed / _fadingTime, 1) * _musicVolume;
+                    MediaPlayer.Volume = Math.Min(Elapsed / FadingTime, 1) * MusicVolume;
                 }
             }
 
 
-            if ((MediaPlayer.Volume == 0 || !_fading) && (_actualTitle == "" || _actualTitle == "title" || MediaPlayer.Queue.ActiveSong != SongDictionary[_actualTitle]))
+            if ((MediaPlayer.Volume == 0 || !Fading) && (ActualTitle is null || ActualTitle == "title" || MediaPlayer.Queue.ActiveSong != SongDictionary[ActualTitle]))
             {
-                _elapsed = 0;
+                Elapsed = 0;
 
-                if (_actualTitle == "") { MediaPlayer.Stop(); }
+                if (ActualTitle is null) { MediaPlayer.Stop(); }
 
                 foreach (string song in _songs)
                 {
-                    if (_actualTitle == song)
+                    if (ActualTitle == song)
                     {
-                        MediaPlayer.Play(SongDictionary[_actualTitle]);
+                        MediaPlayer.Play(SongDictionary[ActualTitle]);
                         break;
                     }
                 }
             }
         }
 
-        public void PlayMusic(string newTitle, bool fading = true, float fadingTime = 500)
+        public void PlayMusic(string newTitle, bool fading = true, int fadingTime = 500)
         {
-            if (newTitle == _actualTitle) return;
+            if (newTitle == ActualTitle) return;
 
-            _elapsed = 0;
+            Elapsed = 0;
 
-            _fading = fading;
-            _fadingTime = fadingTime;
+            Fading = fading;
+            FadingTime = fadingTime;
 
-            _actualTitle = newTitle;
+            ActualTitle = newTitle;
         }
 
-        public void StopMusic(bool fading = true, float fadingTime = 500)
+        public void StopMusic(bool fading = true, int fadingTime = 500)
         {
-            _actualTitle = "";
-            _fading = fading;
-            _fadingTime = fadingTime;
-        }
+            ActualTitle = null;
 
-        public void SetMusicVolume(float volume)
-        {
-            _musicVolume = volume;
-            MediaPlayer.Volume = _musicVolume;
-        }
-
-        public void SetEffectsVolume(float volume)
-        {
-            _effectsVolume = volume;
+            Fading = fading;
+            FadingTime = fadingTime;
         }
 
         public void PlayEffect(string soundEffect, float pich = 0, float pan = 0, float volume = 1)
@@ -123,7 +129,7 @@ namespace Abyss_Call
             {
                 if (effect == soundEffect)
                 {
-                    SoundEffectDictionary[soundEffect].Play(_effectsVolume * volume, pich, pan);
+                    SoundEffectDictionary[soundEffect].Play(EffectsVolume * volume, pich, pan);
                     break;
                 }
             }
@@ -133,9 +139,9 @@ namespace Abyss_Call
         {
             float distance = 0.008f * (float)Math.Sqrt((from.X - to.X) * (from.X - to.X) + (from.Y - to.Y) * (from.Y - to.Y));
             float balance = Math.Min(Math.Abs(to.X - from.X) * 0.005f, 1);
-            float vol = Math.Min(_effectsVolume / (distance * distance), _effectsVolume) * volume;
+            float vol = Math.Min(EffectsVolume / (distance * distance), EffectsVolume) * volume;
 
-            if (vol / volume <= _effectsVolume * 0.025) return;
+            if (vol / volume <= EffectsVolume * 0.025) return;
 
             foreach (string effect in _soundEffects)
             {
@@ -156,18 +162,6 @@ namespace Abyss_Call
                 }
             }
         }
-
-
-        public float GetMusicVolume()
-        {
-            return _musicVolume;
-        }
-
-        public float GetEffectsVolume()
-        {
-            return _effectsVolume;
-        }
-
         public void UnloadContent()
         {
 
