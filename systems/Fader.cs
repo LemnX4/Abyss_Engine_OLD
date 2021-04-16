@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-
-
-namespace Abyss_Call
+﻿namespace Abyss_Call
 {
     class Fader : System
     {

@@ -48,7 +48,6 @@ namespace Abyss_Call
 
         public Drawable()
         {
-            Tag = "drawable";
             _isRenderable = true;
             _alpha = 1f;
         }

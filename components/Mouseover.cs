@@ -23,7 +23,6 @@ namespace Abyss_Call
         public Rectangle Area { get; set; } = new Rectangle(0, 0, 0, 0);
         public Mouseover()
         {
-            Tag = "mouseover";
             _hovered = false;
         }
     }

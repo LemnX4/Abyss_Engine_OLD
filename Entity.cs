@@ -63,23 +63,6 @@ namespace Abyss_Call
             return Components.Find(component => component is T) != null;
         }
 
-        public bool HasComponent(string tag)
-        {
-            return Components.Find(component => component.Tag == tag) != null;
-        }
-
-        public bool HasComponents(IEnumerable<string> tags)
-        {
-            int total = 0;
-            int nbr = 0;
-            foreach (string tag in tags) {
-                total++;
-                if (Components.Find(component => component.Tag == tag) != null)
-                    nbr++;
-            }
-            return nbr == total;
-        }
-
         public T GetComponent<T>() where T : Component
         {
             return (T)Components.Find(component => component is T);

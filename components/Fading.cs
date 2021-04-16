@@ -26,7 +26,6 @@ namespace Abyss_Call
         }
         public Fading()
         {
-            Tag = "fading";
             _properTime = 0;
         }
     }

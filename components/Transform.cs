@@ -41,8 +41,6 @@ namespace Abyss_Call
         public float Rotation { get; set; } = 0f;
         public Transform()
         {
-            Tag = "transform";
-            
             _position = new Vector2(0f, 0f);
             _scale = 1f;
         }
