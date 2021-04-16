@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 namespace Abyss_Call
 {
-    public class System
+    public abstract class System
     {
         public string Tag { get; protected set; } = null;
-        public List<string> Requirements { get; protected set; } = null;
+        public abstract bool Requirements(Entity e);
         public List<Entity> EntityBucket { get; set; } = new List<Entity>();
 
         public void Update(int deltaTime)

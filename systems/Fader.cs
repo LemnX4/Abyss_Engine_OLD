@@ -5,10 +5,10 @@ namespace Abyss_Call
 {
     class Fader : System
     {
+        public override bool Requirements(Entity e) => e.HasComponent<Fading>();
         public Fader()
         {
             Tag = "fader";
-            Requirements = new List<string> { "fading" };
         }
         protected override void UpdateEntity(Entity entity, int deltaTime)
         {

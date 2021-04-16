@@ -6,10 +6,10 @@ namespace Abyss_Call
 {
     public class Mouseoverer : System
     {
+        public override bool Requirements(Entity e) => e.HasComponent<Transform>() && e.HasComponent<Mouseover>();
         public Mouseoverer()
         {
             Tag = "mouseoverer";
-            Requirements = new List<string> { "mouseover", "transform" };
         }
         protected override void UpdateEntity(Entity entity, int deltaTime)
         {

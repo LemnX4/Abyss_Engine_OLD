@@ -9,11 +9,11 @@ namespace Abyss_Call
     {
         public GraphicsDeviceManager DeviceManager;
         public SpriteBatch SpriteBatch;
+        public override bool Requirements(Entity e) => e.HasComponent<Transform>() && e.HasComponent<Drawable>();
 
         public Renderer(Game game)
         {
             Tag = "renderer";
-            Requirements = new List<string> { "transform", "drawable" };
 
             DeviceManager = new GraphicsDeviceManager(game);
         }

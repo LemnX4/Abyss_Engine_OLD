@@ -39,7 +39,7 @@ namespace Abyss_Call
 
             foreach (System s in Game.Systems)
             {
-                if ((s.Requirements == null || this.HasComponents(s.Requirements)) && !s.EntityBucket.Contains(this))
+                if (s.Requirements(this) && !s.EntityBucket.Contains(this))
                     s.EntityBucket.Add(this);
             }
         }
@@ -53,7 +53,7 @@ namespace Abyss_Call
 
             foreach (System s in Game.Systems)
             {
-                if (s.Requirements != null && !this.HasComponents(s.Requirements) && s.EntityBucket.Contains(this))
+                if (s.Requirements(this) && s.EntityBucket.Contains(this))
                     s.EntityBucket.Remove(this);
             }
         }
