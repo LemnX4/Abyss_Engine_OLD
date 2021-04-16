@@ -13,8 +13,6 @@ namespace Abyss_Call
 
         public Renderer(Game game)
         {
-            Tag = "renderer";
-
             DeviceManager = new GraphicsDeviceManager(game);
         }
 
@@ -39,12 +37,21 @@ namespace Abyss_Call
             Transform t = entity.GetComponent<Transform>();
             Drawable d = entity.GetComponent<Drawable>();
 
+            if (entity.HasComponent<Fading>())
+            {
+                Fading f = entity.GetComponent<Fading>();
+
+                if (f.Style == FadingStyle.FadeIn)
+                    entity.GetComponent<Drawable>().Alpha = (float)f.LifePercent;
+                if (f.Style == FadingStyle.FadeOut)
+                    entity.GetComponent<Drawable>().Alpha = (float)(1 - f.LifePercent);
+            }
+
             var texture = Game.TextureManager.GetTexture(d.TextureTag);
+            Point TexturePosition = d.TexturePosition;
 
             if (texture == null)
                 return;
-
-            Point TexturePosition = d.TexturePosition;
 
             if (entity.HasComponent<Animation>())
             {

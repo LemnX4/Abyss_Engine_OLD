@@ -44,8 +44,8 @@ namespace Abyss_Call
             }
         }
         public float EffectsVolume { get; set; } = 0.001f;
-        public int Elapsed { get; set; } = 0;
-        public int FadingTime { get; set; } = 600;
+        public double Elapsed { get; set; } = 0;
+        public double FadingTime { get; set; } = 600;
         public bool Fading { get; set; } = false;
 
         public AudioManager()
@@ -67,24 +67,23 @@ namespace Abyss_Call
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(double gameTime)
         {
-            Elapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            Elapsed += gameTime;
             Elapsed = Math.Min(Elapsed, FadingTime);
 
             if (Fading)
             {
                 if (ActualTitle is null || ActualTitle == "title" || MediaPlayer.Queue.ActiveSong != SongDictionary[ActualTitle])
                 {
-                    MediaPlayer.Volume = Math.Max(1 - Elapsed / FadingTime, 0) * MusicVolume;
+                    MediaPlayer.Volume = (float)(Math.Max(1 - Elapsed / FadingTime, 0) * MusicVolume);
                 }
 
                 else if (MediaPlayer.Volume < MusicVolume)
                 {
-                    MediaPlayer.Volume = Math.Min(Elapsed / FadingTime, 1) * MusicVolume;
+                    MediaPlayer.Volume = (float)(Math.Min(Elapsed / FadingTime, 1) * MusicVolume);
                 }
             }
-
 
             if ((MediaPlayer.Volume == 0 || !Fading) && (ActualTitle is null || ActualTitle == "title" || MediaPlayer.Queue.ActiveSong != SongDictionary[ActualTitle]))
             {
@@ -103,7 +102,7 @@ namespace Abyss_Call
             }
         }
 
-        public void PlayMusic(string newTitle, bool fading = true, int fadingTime = 500)
+        public void PlayMusic(string newTitle, bool fading = true, double fadingTime = 500)
         {
             if (newTitle == ActualTitle) return;
 
@@ -115,7 +114,7 @@ namespace Abyss_Call
             ActualTitle = newTitle;
         }
 
-        public void StopMusic(bool fading = true, int fadingTime = 500)
+        public void StopMusic(bool fading = true, double fadingTime = 500)
         {
             ActualTitle = null;
 
@@ -125,14 +124,12 @@ namespace Abyss_Call
 
         public void PlayEffect(string soundEffect, float pich = 0, float pan = 0, float volume = 1)
         {
-            foreach (string effect in _soundEffects)
-            {
-                if (effect == soundEffect)
-                {
-                    SoundEffectDictionary[soundEffect].Play(EffectsVolume * volume, pich, pan);
-                    break;
-                }
-            }
+            var effect = _soundEffects.Find(e => e == soundEffect);
+
+            if (effect is null)
+                return;
+
+            SoundEffectDictionary[effect].Play(EffectsVolume * volume, pich, pan);
         }
 
         public void PlayEffect3D(string soundEffect, Point from, Point to, float pich = 0, float volume = 1)
@@ -143,29 +140,21 @@ namespace Abyss_Call
 
             if (vol / volume <= EffectsVolume * 0.025) return;
 
-            // to refactor
-            foreach (string effect in _soundEffects)
+            var effect = _soundEffects.Find(e => e == soundEffect + "_mono");
+
+            if (effect is null)
+                return;
+
+            if (to.X > from.X)
             {
-                if (effect == soundEffect + "_mono")
-                {
-                    if (to.X > from.X)
-                    {
-                        SoundEffectDictionary[soundEffect + "_mono"].Play((1 + balance) * vol * 2, pich, 1);
-                        SoundEffectDictionary[soundEffect + "_mono"].Play((1 - balance) * vol * 2, pich, -1);
-                    }
-                    else
-                    {
-                        SoundEffectDictionary[soundEffect + "_mono"].Play((1 + balance) * vol * 2, pich, -1);
-                        SoundEffectDictionary[soundEffect + "_mono"].Play((1 - balance) * vol * 2, pich, 1);
-                    }
-
-                    break;
-                }
+                SoundEffectDictionary[effect].Play((1 + balance) * vol * 2, pich, 1);
+                SoundEffectDictionary[effect].Play((1 - balance) * vol * 2, pich, -1);
             }
-        }
-        public void UnloadContent()
-        {
-
+            else
+            {
+                SoundEffectDictionary[effect].Play((1 + balance) * vol * 2, pich, -1);
+                SoundEffectDictionary[effect].Play((1 - balance) * vol * 2, pich, 1);
+            }
         }
     }
 }

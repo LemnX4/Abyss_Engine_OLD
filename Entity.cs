@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
+
 namespace Abyss_Call
 {
     public class Entity
     {
-        public string Tag { get; set; } = null;
-
         private bool _isUpdatable;
         public bool IsUpdatable
         {
@@ -24,9 +23,8 @@ namespace Abyss_Call
         public List<Component> Components { get; protected set; } = new List<Component>();
         public List<Entity> Entities { get; protected set; } = new List<Entity>();
 
-        public Entity(string tag)
+        public Entity()
         {
-            Tag = tag;
             _isUpdatable = true;
 
             AddComponent(new Transform());
@@ -48,12 +46,12 @@ namespace Abyss_Call
         {
             var toRemove = Components.Find(component => component is T);
 
-            if (toRemove != null)
+            if (!(toRemove is null))
                 Components.Remove(toRemove);
 
             foreach (System s in Game.Systems)
             {
-                if (s.Requirements(this) && s.EntityBucket.Contains(this))
+                if (!s.Requirements(this) && s.EntityBucket.Contains(this))
                     s.EntityBucket.Remove(this);
             }
         }

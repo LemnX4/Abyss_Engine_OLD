@@ -2,16 +2,29 @@
 
 namespace Abyss_Call
 {
+    public enum FadingStyle
+    {
+        None, FadeIn, FadeOut
+    }
     class Fading : Component
     {
-        public enum FadingStyle
+        private FadingStyle _style;
+        public FadingStyle Style
         {
-            None, FadeIn, FadeOut
-        }
+            get
+            {
+                return _style;
+            }
+            set
+            {
+                if (_style != value && ProperTime != 0)
+                    ProperTime = Lifetime - ProperTime;
 
-        public FadingStyle Style { get; set; } = FadingStyle.FadeIn;
+                _style = value;
+            }
+        }
         public double LifePercent => ProperTime/Lifetime;
-        public double Lifetime { get; set; } = 500;
+        public double Lifetime { get; set; } = 1000;
         private double _properTime;
         public double ProperTime
         {
@@ -27,6 +40,7 @@ namespace Abyss_Call
         public Fading()
         {
             _properTime = 0;
+            _style = FadingStyle.FadeIn;
         }
     }
 }
