@@ -8,11 +8,14 @@ namespace Abyss_Call
 
         protected override void UpdateEntity(Entity entity, double deltaTime)
         {
-            if (entity.GetComponent<Mouseover>().Hovered && Game.MouseManager.IsButtonPressed(MouseButton.Left))
+            Mouseover mo = entity.GetComponent<Mouseover>();
+
+            if (mo.Hovered && Game.MouseManager.IsButtonPressed(MouseButton.Left))
             {
                 Game.ScenesManager.SwitchToScene(entity.GetComponent<SceneSwitch>().NextScene);
-                entity.GetComponent<Mouseover>().Hovered = false;
-                Game.AudioManager.PlayEffect("mouseover", 1);
+                mo.Hovered = false;
+
+                Game.AudioManager.PlayEffect("mouseover", 0.5f);
             }
         }
     }

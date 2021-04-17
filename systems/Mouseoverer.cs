@@ -8,15 +8,21 @@ namespace Abyss_Call
         public override bool Requirements(Entity e) => e.HasComponent<Transform>() && e.HasComponent<Mouseover>();
         protected override void UpdateEntity(Entity entity, double deltaTime)
         {
-            base.UpdateEntity(entity, deltaTime);
+            Transform t = entity.GetComponent<Transform>();
+            Mouseover mo = entity.GetComponent<Mouseover>();
 
-            Rectangle area = entity.GetComponent<Mouseover>().Area;
-            area.X = (int)(entity.GetComponent<Transform>().Position.X + area.X * Game.SPS);
-            area.Y = (int)(entity.GetComponent<Transform>().Position.Y + area.Y * Game.SPS);
+            Rectangle area = mo.Area;
+            area.X = (int)(t.Position.X + area.X * Game.SPS);
+            area.Y = (int)(t.Position.Y + area.Y * Game.SPS);
             area.Width *= Game.SPS;
             area.Height *= Game.SPS;
 
-            entity.GetComponent<Mouseover>().Hovered = area.Contains(Game.MouseManager.Position);
+            bool hovered = area.Contains(Game.MouseManager.Position);
+
+            if (!mo.Hovered && hovered)
+                Game.AudioManager.PlayEffect("mouseover", -0.5f);
+
+            mo.Hovered = hovered;
         }
     }
 }

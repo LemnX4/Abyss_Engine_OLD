@@ -37,15 +37,6 @@ namespace Abyss_Call
             Transform t = entity.GetComponent<Transform>();
             Drawable d = entity.GetComponent<Drawable>();
 
-            if (entity.HasComponent<Fading>())
-            {
-                Fading f = entity.GetComponent<Fading>();
-
-                if (f.Style == FadingStyle.FadeIn)
-                    entity.GetComponent<Drawable>().Alpha = (float)f.LifePercent;
-                if (f.Style == FadingStyle.FadeOut)
-                    entity.GetComponent<Drawable>().Alpha = (float)(1 - f.LifePercent);
-            }
 
             var texture = Game.TextureManager.GetTexture(d.TextureTag);
             Point TexturePosition = d.TexturePosition;
@@ -53,21 +44,7 @@ namespace Abyss_Call
             if (texture == null)
                 return;
 
-            if (entity.HasComponent<Animation>())
-            {
-                Animation a = entity.GetComponent<Animation>();
-                TexturePosition.X = a.Keyframe * d.TextureSize.X;
-            }
-
-            if (entity.HasComponent<Mouseover>())
-            {
-                Mouseover mo = entity.GetComponent<Mouseover>();
-                TexturePosition.Y += (mo.Hovered ? 1 : 0) * d.TextureSize.Y;
-            }
-            else
-            {
-                TexturePosition.Y += d.Direction * d.TextureSize.Y;
-            }
+            TexturePosition.Y += d.Direction * d.TextureSize.Y;
 
             SpriteBatch.Draw(texture,
                 new Rectangle((int)t.Position.X - d.Offset.X * Game.SPS, (int)t.Position.Y - d.Offset.Y * Game.SPS, 
