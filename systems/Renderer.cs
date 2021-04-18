@@ -26,7 +26,7 @@ namespace Abyss_Call
             SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, null);
 
             foreach (Entity e in EntityBucket)
-                if (e.GetComponent<Drawable>().IsRenderable)
+                if (e.IsRenderable)
                     DrawEntity(e);
 
             SpriteBatch.End();
@@ -36,7 +36,6 @@ namespace Abyss_Call
         {
             Transform t = entity.GetComponent<Transform>();
             Drawable d = entity.GetComponent<Drawable>();
-
 
             var texture = Game.TextureManager.GetTexture(d.TextureTag);
             Point TexturePosition = d.TexturePosition;

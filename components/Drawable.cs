@@ -5,22 +5,6 @@ namespace Abyss_Call
 {
     public class Drawable : Component
     {
-        private bool _isRenderable;
-        public bool IsRenderable
-        {
-            get
-            {
-                return _isRenderable;
-            }
-            set
-            {
-                if (HostEntity != null)
-                    foreach (Entity e in HostEntity.Entities)
-                        e.GetComponent<Drawable>().IsRenderable = value;
-
-                _isRenderable = value;
-            }
-        }
         public string TextureTag { get; set; } = null;
         public Point TexturePosition { get; set; } = new Point(0, 0);
         public Point TextureSize { get; set; } = new Point(0, 0);
@@ -48,7 +32,6 @@ namespace Abyss_Call
 
         public Drawable()
         {
-            _isRenderable = true;
             _alpha = 1f;
         }
     }

@@ -20,15 +20,28 @@ namespace Abyss_Call
                 _isUpdatable = value;
             }
         }
+        private bool _isRenderable;
+        public bool IsRenderable
+        {
+            get
+            {
+                return _isRenderable;
+            }
+            set
+            {
+                foreach (Entity e in Entities)
+                    e.IsRenderable = value;
+
+                _isRenderable = value;
+            }
+        }
         public List<Component> Components { get; protected set; } = new List<Component>();
         public List<Entity> Entities { get; protected set; } = new List<Entity>();
 
         public Entity()
         {
             _isUpdatable = true;
-
-            AddComponent(new Transform());
-            AddComponent(new Drawable());
+            _isRenderable = true;
         }
         public void AddComponent(Component component)
         {

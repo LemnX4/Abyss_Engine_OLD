@@ -13,7 +13,7 @@
             if (f.LifePercent == 1)
             {
                 if (f.Style == FadingStyle.FadeOut)
-                    d.IsRenderable = false;
+                    entity.IsRenderable = false;
 
                 entity.RemoveComponent<Fading>();
             }
